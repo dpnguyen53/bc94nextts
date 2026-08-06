@@ -10,7 +10,11 @@ export const fetchData = async () => {
     const result = await response.json();
     return result.content;
   } catch (error) {
-    throw error;
+    // apistore.cybersoft.edu.vn is a flaky shared training API and can drop
+    // connections during Vercel's build-time prerender; fail soft so a
+    // transient outage there doesn't take down the whole deployment.
+    console.error("fetchData failed:", error);
+    return [];
   }
 };
 
